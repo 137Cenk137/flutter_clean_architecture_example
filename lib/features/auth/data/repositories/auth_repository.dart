@@ -1,0 +1,44 @@
+import 'package:flutter_clean_architecture/core/errors/failures.dart';
+import 'package:flutter_clean_architecture/features/auth/data/datasources/auth_remote_date_source.dart';
+import 'package:flutter_clean_architecture/features/auth/domain/repository/auth_repository.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:flutter_clean_architecture/core/errors/exceptions.dart';
+
+class AuthRepositoryImpl implements AuthRepository {
+  final AuthRemoteDataSource authRemoteDataSource;
+  const AuthRepositoryImpl({required this.authRemoteDataSource});
+
+  @override
+  Future<Either<Failure, String>> signUp({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await authRemoteDataSource.signUp(
+        name: name,
+        email: email,
+        password: password,
+      );
+      return Right(response);
+    } on ServerExcepiton catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> loginWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await authRemoteDataSource.loginWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return Right(response);
+    } on ServerExcepiton catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+}
