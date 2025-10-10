@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/core/theme/app_pallete.dart';
+import 'package:flutter_clean_architecture/features/auth/presentation/bloc/auth_bloc_bloc.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/pages/login_page.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/widgets/auth_field.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/widgets/auth_gradient_button.dart';
@@ -59,7 +61,20 @@ class _SignupPageState extends State<SignupPage> {
                 isPassordField: true,
               ),
               const SizedBox(height: 20),
-              AuthGradientButton(onPressed: () {}, text: 'Sign up'),
+              AuthGradientButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    context.read<AuthBlocBloc>().add(
+                      AuthBlocSignUpEvent(
+                        name: _nameController.text.trim(),
+                        email: _emailController.text.trim(),
+                        password: _passwordController.text.trim(),
+                      ),
+                    );
+                  }
+                },
+                text: 'Sign up',
+              ),
               const SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
