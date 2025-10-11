@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_clean_architecture/core/common/widgets/loader.dart';
 import 'package:flutter_clean_architecture/core/theme/app_pallete.dart';
+import 'package:flutter_clean_architecture/features/auth/presentation/bloc/auth_bloc_bloc.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/widgets/auth_field.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/widgets/auth_gradient_button.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/pages/signup_page.dart';
@@ -30,54 +33,71 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Login Page',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              const SizedBox(height: 20),
-              AuthField(hintText: 'Email', controller: _emailController),
-              const SizedBox(height: 20),
-              AuthField(
-                hintText: 'Password',
-                controller: _passwordController,
-                isObscureText: true,
-                isPassordField: true,
-              ),
-              const SizedBox(height: 20),
-              AuthGradientButton(onPressed: () {}, text: 'Login'),
-              const SizedBox(height: 10),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignupPage()),
-                  );
-                },
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Already have an account?  ',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    children: [
-                      TextSpan(
-                        text: 'Sign up',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              color: AppPallete.gradient1,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                            ),
+        child: BlocConsumer<AuthBlocBloc, AuthBlocState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            if (state is AuthBlocLoading) {
+              return const Loader();
+            }
+            if (state is AuthBlocFailure) {
+              return Center(child: Text(state.error));
+            }
+
+            if (state is AuthBlocSuccess) {
+              return Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Login Page',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 20),
+                    AuthField(hintText: 'Email', controller: _emailController),
+                    const SizedBox(height: 20),
+                    AuthField(
+                      hintText: 'Password',
+                      controller: _passwordController,
+                      isObscureText: true,
+                      isPassordField: true,
+                    ),
+                    const SizedBox(height: 20),
+                    AuthGradientButton(onPressed: () {}, text: 'Login'),
+                    const SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignupPage()),
+                        );
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Already have an account?  ',
+                          style: Theme.of(context).textTheme.titleMedium,
+                          children: [
+                            TextSpan(
+                              text: 'Sign up',
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(
+                                    color: AppPallete.gradient1,
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
+              );
+            }
+          },
         ),
       ),
     );
