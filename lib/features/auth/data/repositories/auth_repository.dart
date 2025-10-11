@@ -2,6 +2,7 @@ import 'package:flutter_clean_architecture/core/errors/failures.dart';
 import 'package:flutter_clean_architecture/features/auth/data/datasources/auth_remote_date_source.dart';
 import 'package:flutter_clean_architecture/features/auth/domain/repository/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:flutter_clean_architecture/features/auth/domain/entities/user.dart';
 import 'package:flutter_clean_architecture/core/errors/exceptions.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -9,7 +10,7 @@ class AuthRepositoryImpl implements AuthRepository {
   const AuthRepositoryImpl({required this.authRemoteDataSource});
 
   @override
-  Future<Either<Failure, String>> signUp({
+  Future<Either<Failure, User>> signUp({
     required String name,
     required String email,
     required String password,
@@ -27,7 +28,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, String>> loginWithEmailAndPassword({
+  Future<Either<Failure, User>> loginWithEmailAndPassword({
     required String email,
     required String password,
   }) async {

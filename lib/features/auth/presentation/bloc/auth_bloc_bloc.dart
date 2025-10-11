@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_clean_architecture/features/auth/domain/entities/user.dart';
 import 'package:flutter_clean_architecture/features/auth/domain/repository/auth_repository.dart';
 
 part 'auth_bloc_event.dart';
@@ -19,7 +20,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
       );
       response.fold(
         (l) => emit(AuthBlocFailure(l.toString())),
-        (userId) => emit(AuthBlocSuccess(userId)),
+        (user) => emit(AuthBlocSuccess(user)),
       );
     });
     on<AuthBlocLoginEvent>((event, emit) async {
@@ -30,7 +31,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
       );
       response.fold(
         (l) => emit(AuthBlocFailure(l.toString())),
-        (userId) => emit(AuthBlocSuccess(userId)),
+        (user) => emit(AuthBlocSuccess(user)),
       );
     });
   }

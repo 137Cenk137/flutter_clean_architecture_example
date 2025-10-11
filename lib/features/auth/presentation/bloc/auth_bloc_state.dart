@@ -8,8 +8,8 @@ final class AuthBlocInitial extends AuthBlocState {}
 final class AuthBlocLoading extends AuthBlocState {}
 
 final class AuthBlocSuccess extends AuthBlocState {
-  final String userId;
-  AuthBlocSuccess(this.userId);
+  final User user;
+  AuthBlocSuccess(this.user);
 }
 
 final class AuthBlocFailure extends AuthBlocState {
