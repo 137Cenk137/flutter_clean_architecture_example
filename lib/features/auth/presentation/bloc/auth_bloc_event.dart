@@ -19,3 +19,5 @@ final class AuthBlocLoginEvent extends AuthBlocEvent {
   final String password;
   AuthBlocLoginEvent({required this.email, required this.password});
 }
+
+final class AuthBlocIsUserLoggedInEvent extends AuthBlocEvent {}

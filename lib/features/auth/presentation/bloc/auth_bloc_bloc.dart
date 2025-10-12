@@ -13,6 +13,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
       super(AuthBlocInitial()) {
     on<AuthBlocSignUpEvent>(_onAuthBlocSignUpEvent);
     on<AuthBlocLoginEvent>(_onAuthBlocLoginEvent);
+    on<AuthBlocIsUserLoggedInEvent>(_onAuthBlocIsUserLoggedInEvent);
   }
 
   void _onAuthBlocSignUpEvent(
@@ -40,6 +41,18 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
       email: event.email,
       password: event.password,
     );
+    response.fold(
+      (l) => emit(AuthBlocFailure(l.toString())),
+      (user) => emit(AuthBlocSuccess(user)),
+    );
+  }
+
+  void _onAuthBlocIsUserLoggedInEvent(
+    AuthBlocIsUserLoggedInEvent event,
+    Emitter<AuthBlocState> emit,
+  ) async {
+    emit(AuthBlocLoading());
+    final response = await _authRepository.getCurrentUser();
     response.fold(
       (l) => emit(AuthBlocFailure(l.toString())),
       (user) => emit(AuthBlocSuccess(user)),
