@@ -4,6 +4,7 @@ import 'package:flutter_clean_architecture/features/auth/domain/repository/auth_
 import 'package:fpdart/fpdart.dart';
 import 'package:flutter_clean_architecture/features/auth/domain/entities/user.dart';
 import 'package:flutter_clean_architecture/core/errors/exceptions.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource authRemoteDataSource;
@@ -15,16 +16,13 @@ class AuthRepositoryImpl implements AuthRepository {
     required String email,
     required String password,
   }) async {
-    try {
-      final response = await authRemoteDataSource.signUp(
+    return _getUser(
+      () async => await authRemoteDataSource.signUp(
         name: name,
         email: email,
         password: password,
-      );
-      return Right(response);
-    } on ServerExcepiton catch (e) {
-      return Left(Failure(e.toString()));
-    }
+      ),
+    );
   }
 
   @override
@@ -32,14 +30,24 @@ class AuthRepositoryImpl implements AuthRepository {
     required String email,
     required String password,
   }) async {
-    try {
-      final response = await authRemoteDataSource.loginWithEmailAndPassword(
+    return _getUser(
+      () async => await authRemoteDataSource.loginWithEmailAndPassword(
         email: email,
         password: password,
-      );
+      ),
+    );
+  }
+
+  Future<Either<Failure, User>> _getUser(
+    Future<User> Function() getUser,
+  ) async {
+    try {
+      final response = await getUser();
       return Right(response);
     } on ServerExcepiton catch (e) {
       return Left(Failure(e.toString()));
+    } on sb.AuthException catch (e) {
+      return Left(Failure(e.message));
     }
   }
 }
