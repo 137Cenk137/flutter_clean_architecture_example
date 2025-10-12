@@ -11,28 +11,38 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
   AuthBlocBloc({required AuthRepository authRepository})
     : _authRepository = authRepository,
       super(AuthBlocInitial()) {
-    on<AuthBlocSignUpEvent>((event, emit) async {
-      emit(AuthBlocLoading());
-      final response = await _authRepository.signUp(
-        name: event.name,
-        email: event.email,
-        password: event.password,
-      );
-      response.fold(
-        (l) => emit(AuthBlocFailure(l.toString())),
-        (user) => emit(AuthBlocSuccess(user)),
-      );
-    });
-    on<AuthBlocLoginEvent>((event, emit) async {
-      emit(AuthBlocLoading());
-      final response = await _authRepository.loginWithEmailAndPassword(
-        email: event.email,
-        password: event.password,
-      );
-      response.fold(
-        (l) => emit(AuthBlocFailure(l.toString())),
-        (user) => emit(AuthBlocSuccess(user)),
-      );
-    });
+    on<AuthBlocSignUpEvent>(_onAuthBlocSignUpEvent);
+    on<AuthBlocLoginEvent>(_onAuthBlocLoginEvent);
+  }
+
+  void _onAuthBlocSignUpEvent(
+    AuthBlocSignUpEvent event,
+    Emitter<AuthBlocState> emit,
+  ) async {
+    emit(AuthBlocLoading());
+    final response = await _authRepository.signUp(
+      name: event.name,
+      email: event.email,
+      password: event.password,
+    );
+    response.fold(
+      (l) => emit(AuthBlocFailure(l.toString())),
+      (user) => emit(AuthBlocSuccess(user)),
+    );
+  }
+
+  void _onAuthBlocLoginEvent(
+    AuthBlocLoginEvent event,
+    Emitter<AuthBlocState> emit,
+  ) async {
+    emit(AuthBlocLoading());
+    final response = await _authRepository.loginWithEmailAndPassword(
+      email: event.email,
+      password: event.password,
+    );
+    response.fold(
+      (l) => emit(AuthBlocFailure(l.toString())),
+      (user) => emit(AuthBlocSuccess(user)),
+    );
   }
 }
