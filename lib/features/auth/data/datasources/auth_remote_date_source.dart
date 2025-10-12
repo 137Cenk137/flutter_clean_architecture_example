@@ -3,6 +3,9 @@ import 'package:flutter_clean_architecture/features/auth/data/models/user_model.
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthRemoteDataSource {
+  Session? get currentUserSession;
+
+  Future<UserModel?> getCurrentUser();
   Future<UserModel> signUp({
     required String name,
     required String email,
@@ -17,6 +20,25 @@ abstract interface class AuthRemoteDataSource {
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final SupabaseClient supabase;
   AuthRemoteDataSourceImpl({required this.supabase});
+
+  @override
+  Session? get currentUserSession => supabase.auth.currentSession;
+  @override
+  Future<UserModel?> getCurrentUser() async {
+    try {
+      if (currentUserSession != null) {
+        final response = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', currentUserSession!.user.id)
+            .single();
+        return UserModel.fromJson(response);
+      }
+      return null;
+    } catch (e) {
+      throw ServerExcepiton(e.toString());
+    }
+  }
 
   @override
   Future<UserModel> signUp({
