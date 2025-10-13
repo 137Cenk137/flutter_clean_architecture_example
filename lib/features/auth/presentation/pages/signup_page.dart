@@ -41,19 +41,18 @@ class _SignupPageState extends State<SignupPage> {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
-            // TODO: implement listener
+            if (state is AuthFailure) {
+              showSnackBar(context, state.error);
+            }
           },
           builder: (context, state) {
             if (state is AuthLoading) {
               return const Loader();
             }
-            if (state is AuthFailure) {
-              showSnackBar(context, state.error);
-              return const SizedBox.shrink();
-            }
+
             return Form(
               key: _formKey,
               child: Column(
@@ -94,7 +93,9 @@ class _SignupPageState extends State<SignupPage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
                       );
                     },
                     child: RichText(
@@ -104,14 +105,6 @@ class _SignupPageState extends State<SignupPage> {
                         children: [
                           TextSpan(
                             text: 'Login',
-                            onEnter: (event) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginPage(),
-                                ),
-                              );
-                            },
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(
                                   color: AppPallete.gradient1,
