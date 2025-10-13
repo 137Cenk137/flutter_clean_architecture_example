@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_clean_architecture/core/common/app_user/appuser_cubit.dart';
+import 'package:flutter_clean_architecture/core/common/app_user/appuser_state.dart';
 import 'package:flutter_clean_architecture/core/theme/theme.dart';
-import 'package:flutter_clean_architecture/features/auth/presentation/bloc/auth_bloc_bloc.dart';
+import 'package:flutter_clean_architecture/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/pages/login_page.dart';
 import 'package:flutter_clean_architecture/dependency_injection.dart';
 
@@ -9,7 +11,7 @@ void main() async {
   await initDependency();
   runApp(
     MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => serviceLocator<AuthBlocBloc>())],
+      providers: [BlocProvider(create: (_) => serviceLocator<AuthBloc>())],
       child: const MyApp(),
     ),
   );
@@ -27,7 +29,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    context.read<AuthBlocBloc>().add(AuthBlocIsUserLoggedInEvent());
+    context.read<AuthBloc>().add(AuthIsUserLoggedInEvent());
   }
 
   @override
@@ -36,7 +38,17 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Clean Architecture',
       theme: AppTheme.darkTheme,
-      home: const LoginPage(),
+      home: BlocSelector<AppUserCubit, AppUserState, bool>(
+        selector: (state) {
+          return state is AppUserLoggedIn;
+        },
+        builder: (context, state) {
+          if (state) {
+            return const Text('Home');
+          }
+          return const LoginPage();
+        },
+      ),
     );
   }
 }
