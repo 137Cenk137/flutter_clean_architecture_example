@@ -6,12 +6,16 @@ import 'package:flutter_clean_architecture/core/theme/theme.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/pages/login_page.dart';
 import 'package:flutter_clean_architecture/dependency_injection.dart';
+import 'package:flutter_clean_architecture/features/blog/presentation/pages/blog_page.dart';
 
 void main() async {
   await initDependency();
   runApp(
     MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => serviceLocator<AuthBloc>())],
+      providers: [
+        BlocProvider(create: (_) => serviceLocator<AuthBloc>()),
+        BlocProvider(create: (_) => serviceLocator<AppUserCubit>()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -44,7 +48,7 @@ class _MyAppState extends State<MyApp> {
         },
         builder: (context, state) {
           if (state) {
-            return const Text('Home');
+            return const BlogPage();
           }
           return const LoginPage();
         },

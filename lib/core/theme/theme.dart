@@ -13,6 +13,13 @@ class AppTheme {
       elevation: 0,
       iconTheme: IconThemeData(color: AppPallete.whiteColor),
     ),
+    chipTheme: ChipThemeData(
+      backgroundColor: AppPallete.backgroundColor,
+      selectedColor: AppPallete.gradient2,
+      labelStyle: TextStyle(color: AppPallete.whiteColor),
+      padding: EdgeInsets.all(10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: EdgeInsets.all(20),
       hintStyle: TextStyle(color: AppPallete.whiteColor),
