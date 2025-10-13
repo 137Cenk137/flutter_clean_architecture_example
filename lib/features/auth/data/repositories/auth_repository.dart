@@ -2,8 +2,9 @@ import 'package:flutter_clean_architecture/core/errors/failures.dart';
 import 'package:flutter_clean_architecture/features/auth/data/datasources/auth_remote_date_source.dart';
 import 'package:flutter_clean_architecture/features/auth/domain/repository/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:flutter_clean_architecture/features/auth/domain/entities/user.dart';
+
 import 'package:flutter_clean_architecture/core/errors/exceptions.dart';
+import 'package:flutter_clean_architecture/core/common/entities/user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 class AuthRepositoryImpl implements AuthRepository {

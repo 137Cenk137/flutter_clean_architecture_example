@@ -1,4 +1,4 @@
-import 'package:flutter_clean_architecture/features/auth/domain/entities/user.dart';
+import 'package:flutter_clean_architecture/core/common/entities/user.dart';
 
 class UserModel extends User {
   UserModel({
