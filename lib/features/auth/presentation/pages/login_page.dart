@@ -33,95 +33,82 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Row(
-          children: [
-            BlocConsumer<AuthBloc, AuthState>(
-              listener: (context, state) {},
-              builder: (context, state) {
-                if (state is AuthLoading) {
-                  return const Loader();
-                }
-                if (state is AuthFailure) {
-                  showSnackBar(context, state.error);
-                  return const SizedBox.shrink();
-                }
+        padding: const EdgeInsets.all(20),
+        child: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthFailure) {
+              showSnackBar(context, state.error);
+            }
+          },
+          builder: (context, state) {
+            if (state is AuthLoading) {
+              return const Loader();
+            }
 
-                if (state is AuthSuccess) {
-                  return Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Login Page',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
+            return Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Login Page',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 50),
+                  ),
+                  const SizedBox(height: 20),
+                  AuthField(hintText: 'Email', controller: _emailController),
+                  const SizedBox(height: 20),
+                  AuthField(
+                    hintText: 'Password',
+                    controller: _passwordController,
+                    isObscureText: true,
+                    isPassordField: true,
+                  ),
+                  const SizedBox(height: 20),
+                  AuthGradientButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        context.read<AuthBloc>().add(
+                          AuthLoginEvent(
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
                           ),
+                        );
+                      }
+                    },
+                    text: 'Login',
+                  ),
+                  const SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignupPage(),
                         ),
-                        const SizedBox(height: 20),
-                        AuthField(
-                          hintText: 'Email',
-                          controller: _emailController,
-                        ),
-                        const SizedBox(height: 20),
-                        AuthField(
-                          hintText: 'Password',
-                          controller: _passwordController,
-                          isObscureText: true,
-                          isPassordField: true,
-                        ),
-                        const SizedBox(height: 20),
-                        AuthGradientButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              context.read<AuthBloc>().add(
-                                AuthLoginEvent(
-                                  email: _emailController.text.trim(),
-                                  password: _passwordController.text.trim(),
+                      );
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Don\'t have an account?  ',
+                        style: Theme.of(context).textTheme.titleMedium,
+                        children: [
+                          TextSpan(
+                            text: 'Sign up',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  color: AppPallete.gradient1,
+                                  fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.italic,
                                 ),
-                              );
-                            }
-                          },
-                          text: 'Login',
-                        ),
-                        const SizedBox(height: 10),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SignupPage(),
-                              ),
-                            );
-                          },
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'Already have an account?  ',
-                              style: Theme.of(context).textTheme.titleMedium,
-                              children: [
-                                TextSpan(
-                                  text: 'Sign up',
-                                  style: Theme.of(context).textTheme.titleMedium
-                                      ?.copyWith(
-                                        color: AppPallete.gradient1,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                ),
-                              ],
-                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ],
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

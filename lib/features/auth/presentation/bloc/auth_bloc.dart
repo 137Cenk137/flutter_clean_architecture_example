@@ -32,7 +32,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       password: event.password,
     );
     response.fold(
-      (l) => emit(AuthFailure(error: l.toString())),
+      (l) => emit(AuthFailure(error: l.message.toString())),
       (r) => _emitUser(r, emit),
     );
   }
@@ -43,7 +43,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       password: event.password,
     );
     response.fold(
-      (l) => emit(AuthFailure(error: l.toString())),
+      (l) => emit(AuthFailure(error: l.message.toString())),
       (r) => _emitUser(r, emit),
     );
   }
@@ -54,7 +54,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     final response = await _authRepository.getCurrentUser();
     response.fold(
-      (l) => emit(AuthFailure(error: l.toString())),
+      (l) => emit(AuthFailure(error: l.message.toString())),
       (r) => _emitUser(r, emit),
     );
   }
