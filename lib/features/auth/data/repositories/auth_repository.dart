@@ -58,7 +58,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final response = await getUser();
       return Right(response);
     } on ServerExcepiton catch (e) {
-      return Left(Failure(e.toString()));
+      return Left(Failure(e.message.toString()));
     } on sb.AuthException catch (e) {
       return Left(Failure(e.message));
     }
