@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/core/common/widgets/loader.dart';
 import 'package:flutter_clean_architecture/core/theme/app_pallete.dart';
 import 'package:flutter_clean_architecture/core/utils/show_snackbar.dart';
-import 'package:flutter_clean_architecture/features/auth/presentation/bloc/auth_bloc_bloc.dart';
+import 'package:flutter_clean_architecture/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/pages/login_page.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/widgets/auth_field.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/widgets/auth_gradient_button.dart';
@@ -42,15 +42,15 @@ class _SignupPageState extends State<SignupPage> {
       ),
       body: Padding(
         padding: EdgeInsets.all(20),
-        child: BlocConsumer<AuthBlocBloc, AuthBlocState>(
+        child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             // TODO: implement listener
           },
           builder: (context, state) {
-            if (state is AuthBlocLoading) {
+            if (state is AuthLoading) {
               return const Loader();
             }
-            if (state is AuthBlocFailure) {
+            if (state is AuthFailure) {
               showSnackBar(context, state.error);
               return const SizedBox.shrink();
             }
@@ -78,8 +78,8 @@ class _SignupPageState extends State<SignupPage> {
                   AuthGradientButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        context.read<AuthBlocBloc>().add(
-                          AuthBlocSignUpEvent(
+                        context.read<AuthBloc>().add(
+                          AuthSignUpEvent(
                             name: _nameController.text.trim(),
                             email: _emailController.text.trim(),
                             password: _passwordController.text.trim(),

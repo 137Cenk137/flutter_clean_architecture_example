@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:flutter_clean_architecture/core/errors/failures.dart';
-import 'package:flutter_clean_architecture/features/auth/domain/entities/user.dart';
+import 'package:flutter_clean_architecture/core/common/entities/user.dart';
 
 abstract interface class AuthRepository {
   Future<Either<Failure, User>> signUp({

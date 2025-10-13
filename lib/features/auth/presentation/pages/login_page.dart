@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/core/common/widgets/loader.dart';
 import 'package:flutter_clean_architecture/core/theme/app_pallete.dart';
 import 'package:flutter_clean_architecture/core/utils/show_snackbar.dart';
-import 'package:flutter_clean_architecture/features/auth/presentation/bloc/auth_bloc_bloc.dart';
+import 'package:flutter_clean_architecture/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/widgets/auth_field.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/widgets/auth_gradient_button.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/pages/signup_page.dart';
@@ -36,18 +36,18 @@ class _LoginPageState extends State<LoginPage> {
         padding: EdgeInsets.all(20),
         child: Row(
           children: [
-            BlocConsumer<AuthBlocBloc, AuthBlocState>(
+            BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {},
               builder: (context, state) {
-                if (state is AuthBlocLoading) {
+                if (state is AuthLoading) {
                   return const Loader();
                 }
-                if (state is AuthBlocFailure) {
+                if (state is AuthFailure) {
                   showSnackBar(context, state.error);
                   return const SizedBox.shrink();
                 }
 
-                if (state is AuthBlocSuccess) {
+                if (state is AuthSuccess) {
                   return Form(
                     key: _formKey,
                     child: Column(
@@ -76,8 +76,8 @@ class _LoginPageState extends State<LoginPage> {
                         AuthGradientButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              context.read<AuthBlocBloc>().add(
-                                AuthBlocLoginEvent(
+                              context.read<AuthBloc>().add(
+                                AuthLoginEvent(
                                   email: _emailController.text.trim(),
                                   password: _passwordController.text.trim(),
                                 ),
