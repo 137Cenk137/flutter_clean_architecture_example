@@ -53,7 +53,7 @@ class _CreateBlogPageState extends State<CreateBlogPage> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(Icons.save),
+            icon: Icon(Icons.check),
           ),
         ],
       ),
@@ -84,12 +84,10 @@ class _CreateBlogPageState extends State<CreateBlogPage> {
                         padding: EdgeInsets.all(16),
                         strokeCap: StrokeCap.round,
                         color: Colors.grey,
-                        child: Container(
+                        child: SizedBox(
                           width: double.infinity,
                           height: 100,
                           child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(
                                 Icons.file_open,
