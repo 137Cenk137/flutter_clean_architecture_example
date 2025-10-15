@@ -1,4 +1,5 @@
-part of 'blog_bloc.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_clean_architecture/features/blog/domain/entities/blog.dart';
 
 @immutable
 sealed class BlogState {}
@@ -12,7 +13,7 @@ final class BlogSuccess extends BlogState {
   BlogSuccess({required this.blogs});
 }
 
-final class BlogError extends BlogState {
+final class BlogFailure extends BlogState {
   final String error;
-  BlogError({required this.error});
+  BlogFailure({required this.error});
 }

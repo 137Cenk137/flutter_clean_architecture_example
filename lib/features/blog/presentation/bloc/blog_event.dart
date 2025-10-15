@@ -1,4 +1,7 @@
-part of 'blog_bloc.dart';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter_clean_architecture/features/blog/domain/entities/blog.dart';
 
 @immutable
 sealed class BlogEvent {}

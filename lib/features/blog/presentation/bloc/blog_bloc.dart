@@ -1,12 +1,10 @@
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/features/blog/domain/entities/blog.dart';
 import 'package:flutter_clean_architecture/features/blog/domain/repositories/blog_repository.dart';
-import 'package:meta/meta.dart';
-
-part 'blog_event.dart';
-part 'blog_state.dart';
+import 'package:flutter_clean_architecture/features/blog/presentation/bloc/blog_event.dart';
+import 'package:flutter_clean_architecture/features/blog/presentation/bloc/blog_state.dart';
 
 class BlogBloc extends Bloc<BlogEvent, BlogState> {
   final BlogRepository _blogRepository;
@@ -32,7 +30,7 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
       topics: event.topics,
     );
     response.fold(
-      (l) => emit(BlogError(error: l.message.toString())),
+      (l) => emit(BlogFailure(error: l.message.toString())),
       (r) => emit(BlogSuccess(blogs: [r])),
     );
   }
@@ -43,7 +41,7 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
   ) async {
     final response = await _blogRepository.updateBlog(event.blog);
     response.fold(
-      (l) => emit(BlogError(error: l.message.toString())),
+      (l) => emit(BlogFailure(error: l.message.toString())),
       (r) => emit(BlogSuccess(blogs: [r])),
     );
   }
@@ -54,7 +52,7 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
   ) async {
     final response = await _blogRepository.deleteBlog(event.blog);
     response.fold(
-      (l) => emit(BlogError(error: l.message.toString())),
+      (l) => emit(BlogFailure(error: l.message.toString())),
       (r) => emit(BlogSuccess(blogs: [r])),
     );
   }
@@ -65,7 +63,7 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
   ) async {
     final response = await _blogRepository.getByUserIDblogs();
     response.fold(
-      (l) => emit(BlogError(error: l.message.toString())),
+      (l) => emit(BlogFailure(error: l.message.toString())),
       (r) => emit(BlogSuccess(blogs: r.map((e) => e).toList())),
     );
   }

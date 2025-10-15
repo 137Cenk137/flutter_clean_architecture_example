@@ -54,8 +54,12 @@ class BlogRepositoryImpl implements BlogRepository {
   }
 
   @override
-  Future<Either<Failure, List<Blog>>> getByUserIDblogs() {
-    // TODO: implement getByUserIDblogs
-    throw UnimplementedError();
+  Future<Either<Failure, List<Blog>>> getByUserIDblogs() async {
+    return await handleRepositoryCallFailure(
+      function: () async {
+        final blogs = await blogRemoteDataSource.getByUserIDblogs();
+        return blogs;
+      },
+    );
   }
 }

@@ -53,9 +53,15 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
       function: () async {
         final response = await supabase
             .from('blogs')
-            .select('*')
-            .eq('user_id', _userID);
-        return response.map((e) => BlogModel.fromJson(e)).toList();
+            .select('*, profiles(name)  ')
+            .eq('id', _userID);
+        return response
+            .map(
+              (e) => BlogModel.fromJson(
+                e,
+              ).copyWith(posterName: e['profiles']['name']),
+            )
+            .toList();
       },
     );
   }
