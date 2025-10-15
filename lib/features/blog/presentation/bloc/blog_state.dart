@@ -4,3 +4,15 @@ part of 'blog_bloc.dart';
 sealed class BlogState {}
 
 final class BlogInitial extends BlogState {}
+
+final class BlogLoading extends BlogState {}
+
+final class BlogSuccess extends BlogState {
+  final List<Blog> blogs;
+  BlogSuccess({required this.blogs});
+}
+
+final class BlogError extends BlogState {
+  final String error;
+  BlogError({required this.error});
+}
