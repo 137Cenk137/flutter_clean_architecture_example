@@ -36,4 +36,24 @@ class BlogModel extends Blog {
       'updatedAt': updatedAt?.toIso8601String(),
     };
   }
+
+  BlogModel copyWith({
+    String? id,
+    String? title,
+    String? content,
+    String? image_url,
+    String? poster_id,
+    List<String>? topics,
+    DateTime? updatedAt,
+  }) {
+    return BlogModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      image_url: image_url ?? this.image_url,
+      poster_id: poster_id ?? this.poster_id,
+      topics: topics ?? this.topics,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 }
