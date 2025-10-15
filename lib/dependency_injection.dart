@@ -4,6 +4,10 @@ import 'package:flutter_clean_architecture/features/auth/data/datasources/auth_r
 import 'package:flutter_clean_architecture/features/auth/data/repositories/auth_repository.dart';
 import 'package:flutter_clean_architecture/features/auth/domain/repository/auth_repository.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:flutter_clean_architecture/features/blog/data/data_sources/blog_remote_datasources.dart';
+import 'package:flutter_clean_architecture/features/blog/data/repositories/blog_repository_impl.dart';
+import 'package:flutter_clean_architecture/features/blog/domain/repositories/blog_repository.dart';
+import 'package:flutter_clean_architecture/features/blog/presentation/bloc/blog_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -18,6 +22,7 @@ Future<void> initDependency() async {
   await _addSupabaseDependency();
   _addCoreDependency();
   _addAuthDependency();
+  _addBlogDependency();
 }
 
 Future<void> _addSupabaseDependency() async {
@@ -34,18 +39,42 @@ void _addCoreDependency() {
 }
 
 void _addAuthDependency() {
-  serviceLocator.registerFactory<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(supabase: serviceLocator<SupabaseClient>()),
-  );
-  serviceLocator.registerFactory<AuthRepository>(
-    () => AuthRepositoryImpl(
-      authRemoteDataSource: serviceLocator<AuthRemoteDataSource>(),
-    ),
-  );
-  serviceLocator.registerLazySingleton<AuthBloc>(
-    () => AuthBloc(
-      authRepository: serviceLocator<AuthRepository>(),
-      appUserCubit: serviceLocator<AppUserCubit>(),
-    ),
-  );
+  //data sources
+  serviceLocator
+    ..registerFactory<AuthRemoteDataSource>(
+      () =>
+          AuthRemoteDataSourceImpl(supabase: serviceLocator<SupabaseClient>()),
+    )
+    //repositories
+    ..registerFactory<AuthRepository>(
+      () => AuthRepositoryImpl(
+        authRemoteDataSource: serviceLocator<AuthRemoteDataSource>(),
+      ),
+    )
+    //blocs
+    ..registerLazySingleton<AuthBloc>(
+      () => AuthBloc(
+        authRepository: serviceLocator<AuthRepository>(),
+        appUserCubit: serviceLocator<AppUserCubit>(),
+      ),
+    );
+}
+
+void _addBlogDependency() {
+  //data sources
+  serviceLocator
+    ..registerFactory<BlogRemoteDataSource>(
+      () =>
+          BlogRemoteDataSourceImpl(supabase: serviceLocator<SupabaseClient>()),
+    )
+    //repositories
+    ..registerFactory<BlogRepository>(
+      () => BlogRepositoryImpl(
+        blogRemoteDataSource: serviceLocator<BlogRemoteDataSource>(),
+      ),
+    )
+    //blocs
+    ..registerLazySingleton<BlogBloc>(
+      () => BlogBloc(blogRepository: serviceLocator<BlogRepository>()),
+    );
 }
