@@ -19,13 +19,15 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
 
   @override
   Future<BlogModel> createBlog(BlogModel blog) async {
-    return await handleRemoteCallException(() async {
-      final response = await supabase
-          .from('blogs')
-          .insert(blog.toJson())
-          .single();
-      return BlogModel.fromJson(response);
-    });
+    return await handleRemoteCallException(
+      function: () async {
+        final response = await supabase
+            .from('blogs')
+            .insert(blog.toJson())
+            .single();
+        return BlogModel.fromJson(response);
+      },
+    );
   }
 
   @override
@@ -33,56 +35,66 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
     required File image,
     required String blogId,
   }) async {
-    return await handleRemoteCallException(() async {
-      await supabase.storage.from('blog_images').upload(blogId, image);
+    return await handleRemoteCallException(
+      function: () async {
+        await supabase.storage.from('blog_images').upload(blogId, image);
 
-      return supabase.storage
-          .from('blog_images')
-          .getPublicUrl(blogId)
-          .toString();
-    });
+        return supabase.storage
+            .from('blog_images')
+            .getPublicUrl(blogId)
+            .toString();
+      },
+    );
   }
 
   @override
   Future<List<BlogModel>> getByUserIDblogs() async {
-    return await handleRemoteCallException(() async {
-      final response = await supabase
-          .from('blogs')
-          .select('*')
-          .eq('user_id', _userID);
-      return response.map((e) => BlogModel.fromJson(e)).toList();
-    });
+    return await handleRemoteCallException(
+      function: () async {
+        final response = await supabase
+            .from('blogs')
+            .select('*')
+            .eq('user_id', _userID);
+        return response.map((e) => BlogModel.fromJson(e)).toList();
+      },
+    );
   }
 
   @override
   Future<BlogModel> getBlogById(String id) async {
-    return await handleRemoteCallException(() async {
-      final response = await supabase
-          .from('blogs')
-          .select('*')
-          .eq('id', id)
-          .single();
-      return BlogModel.fromJson(response);
-    });
+    return await handleRemoteCallException(
+      function: () async {
+        final response = await supabase
+            .from('blogs')
+            .select('*')
+            .eq('id', id)
+            .single();
+        return BlogModel.fromJson(response);
+      },
+    );
   }
 
   @override
   Future<BlogModel> updateBlog(String id, BlogModel blog) async {
-    return await handleRemoteCallException(() async {
-      final response = await supabase
-          .from('blogs')
-          .update(blog.toJson())
-          .eq('id', id)
-          .single();
-      return BlogModel.fromJson(response);
-    });
+    return await handleRemoteCallException(
+      function: () async {
+        final response = await supabase
+            .from('blogs')
+            .update(blog.toJson())
+            .eq('id', id)
+            .single();
+        return BlogModel.fromJson(response);
+      },
+    );
   }
 
   @override
   Future<void> deleteBlog(String id) async {
-    await handleRemoteCallException(() async {
-      await supabase.from('blogs').delete().eq('isd', id);
-    });
+    await handleRemoteCallException(
+      function: () async {
+        await supabase.from('blogs').delete().eq('isd', id);
+      },
+    );
   }
 
   String get _userID => supabase.auth.currentSession?.user.id ?? '';

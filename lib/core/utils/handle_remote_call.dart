@@ -1,8 +1,8 @@
 import 'package:flutter_clean_architecture/core/errors/exceptions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
-Future<T> handleRemoteCallException<T>(
-  Future<T> Function() function, {
+Future<T> handleRemoteCallException<T>({
+  required Future<T> Function() function,
   Exception Function(Object e)? exceptionMapper,
 }) async {
   try {
