@@ -31,6 +31,6 @@ final class BlogDeleteEvent extends BlogEvent {
   BlogDeleteEvent({required this.blog});
 }
 
-final class GetAllBlogsEvent extends BlogEvent {
-  GetAllBlogsEvent();
+final class FetchAllBlogsEvent extends BlogEvent {
+  FetchAllBlogsEvent();
 }

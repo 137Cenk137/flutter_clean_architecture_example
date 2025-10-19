@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_clean_architecture/features/blog/domain/entities/blog.dart';
 import 'package:flutter_clean_architecture/features/blog/domain/repositories/blog_repository.dart';
 import 'package:flutter_clean_architecture/features/blog/presentation/bloc/blog_event.dart';
 import 'package:flutter_clean_architecture/features/blog/presentation/bloc/blog_state.dart';
@@ -15,7 +12,7 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
     on<BlogUploadEvent>(_onBlogUploadEvent);
     on<BlogUpdateEvent>(_onBlogUpdateEvent);
     on<BlogDeleteEvent>(_onBlogDeleteEvent);
-    on<GetAllBlogsEvent>(_onGetAllBlogsEvent);
+    on<FetchAllBlogsEvent>(_onFetchAllBlogsEvent);
   }
 
   void _onBlogUploadEvent(
@@ -31,7 +28,7 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
     );
     response.fold(
       (l) => emit(BlogFailure(error: l.message.toString())),
-      (r) => emit(BlogSuccess(blogs: [r])),
+      (r) => emit(BlogUploadSuccess(blog: r)),
     );
   }
 
@@ -42,7 +39,7 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
     final response = await _blogRepository.updateBlog(event.blog);
     response.fold(
       (l) => emit(BlogFailure(error: l.message.toString())),
-      (r) => emit(BlogSuccess(blogs: [r])),
+      (r) => emit(BlogDisplaySuccess(blogs: [r])),
     );
   }
 
@@ -53,18 +50,18 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
     final response = await _blogRepository.deleteBlog(event.blog);
     response.fold(
       (l) => emit(BlogFailure(error: l.message.toString())),
-      (r) => emit(BlogSuccess(blogs: [r])),
+      (r) => emit(BlogDisplaySuccess(blogs: [r])),
     );
   }
 
-  void _onGetAllBlogsEvent(
-    GetAllBlogsEvent event,
+  void _onFetchAllBlogsEvent(
+    FetchAllBlogsEvent event,
     Emitter<BlogState> emit,
   ) async {
     final response = await _blogRepository.getByUserIDblogs();
     response.fold(
       (l) => emit(BlogFailure(error: l.message.toString())),
-      (r) => emit(BlogSuccess(blogs: r.map((e) => e).toList())),
+      (r) => emit(BlogDisplaySuccess(blogs: r.map((e) => e).toList())),
     );
   }
 }
