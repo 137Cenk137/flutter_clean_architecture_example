@@ -1,4 +1,5 @@
 import 'package:flutter_clean_architecture/core/common/app_user/appuser_cubit.dart';
+import 'package:flutter_clean_architecture/core/network/connection_checker.dart';
 import 'package:flutter_clean_architecture/core/secrets/app_secrets.dart';
 import 'package:flutter_clean_architecture/features/auth/data/datasources/auth_remote_date_source.dart';
 import 'package:flutter_clean_architecture/features/auth/data/repositories/auth_repository.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_clean_architecture/features/blog/data/data_sources/blog_
 import 'package:flutter_clean_architecture/features/blog/data/repositories/blog_repository_impl.dart';
 import 'package:flutter_clean_architecture/features/blog/domain/repositories/blog_repository.dart';
 import 'package:flutter_clean_architecture/features/blog/presentation/bloc/blog_bloc.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -39,6 +41,10 @@ void _addCoreDependency() {
 }
 
 void _addAuthDependency() {
+  serviceLocator.registerLazySingleton<ConnectionChecker>(
+    () => ConnectionCheckerImpl(internetConnection: InternetConnection()),
+  );
+
   //data sources
   serviceLocator
     ..registerFactory<AuthRemoteDataSource>(
@@ -48,6 +54,7 @@ void _addAuthDependency() {
     //repositories
     ..registerFactory<AuthRepository>(
       () => AuthRepositoryImpl(
+        connectionChecker: serviceLocator<ConnectionChecker>(),
         authRemoteDataSource: serviceLocator<AuthRemoteDataSource>(),
       ),
     )
