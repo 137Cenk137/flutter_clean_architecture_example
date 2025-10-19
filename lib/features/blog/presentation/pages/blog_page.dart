@@ -61,7 +61,7 @@ class _BlogPageState extends State<BlogPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    BlogViewerPage.route(blog: state.blogs[index]),
+                    BlogViewerPage.route(state.blogs[index]),
                   );
                 },
               ),
