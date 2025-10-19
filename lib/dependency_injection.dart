@@ -5,20 +5,24 @@ import 'package:flutter_clean_architecture/features/auth/data/datasources/auth_r
 import 'package:flutter_clean_architecture/features/auth/data/repositories/auth_repository.dart';
 import 'package:flutter_clean_architecture/features/auth/domain/repository/auth_repository.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:flutter_clean_architecture/features/blog/data/data_sources/blog_local_data_source.dart';
 import 'package:flutter_clean_architecture/features/blog/data/data_sources/blog_remote_datasources.dart';
 import 'package:flutter_clean_architecture/features/blog/data/repositories/blog_repository_impl.dart';
 import 'package:flutter_clean_architecture/features/blog/domain/repositories/blog_repository.dart';
 import 'package:flutter_clean_architecture/features/blog/presentation/bloc/blog_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:path_provider/path_provider.dart';
 
 final serviceLocator = GetIt.instance;
 
 Future<void> initDependency() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Hive.defaultDirectory = (await getApplicationDocumentsDirectory()).path;
 
   await dotenv.load(fileName: '.env');
   await _addSupabaseDependency();
@@ -74,10 +78,15 @@ void _addBlogDependency() {
       () =>
           BlogRemoteDataSourceImpl(supabase: serviceLocator<SupabaseClient>()),
     )
+    ..registerFactory<BlogLocalDataSource>(
+      () => BlogLocalDataSourceImpl(serviceLocator<Box>()),
+    )
     //repositories
     ..registerFactory<BlogRepository>(
       () => BlogRepositoryImpl(
         blogRemoteDataSource: serviceLocator<BlogRemoteDataSource>(),
+        blogLocalDataSource: serviceLocator<BlogLocalDataSource>(),
+        connectionChecker: serviceLocator<ConnectionChecker>(),
       ),
     )
     //blocs

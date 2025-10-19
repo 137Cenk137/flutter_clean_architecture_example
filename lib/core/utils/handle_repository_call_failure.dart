@@ -5,6 +5,7 @@ import 'package:fpdart/fpdart.dart';
 Future<Either<Failure, T>> handleRepositoryCallFailure<T>({
   required Future<T> Function() function,
   Failure Function(Object e)? failureMapper,
+  Future<Failure> Function()? noInternetConnectionFailureMapper,
 }) async {
   try {
     return Right(await function());
@@ -13,6 +14,9 @@ Future<Either<Failure, T>> handleRepositoryCallFailure<T>({
   } catch (e) {
     if (failureMapper != null) {
       return Left(failureMapper(e));
+    }
+    if (noInternetConnectionFailureMapper != null) {
+      return Left(await noInternetConnectionFailureMapper());
     }
     return Left(Failure(e.toString()));
   }

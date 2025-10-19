@@ -1,6 +1,7 @@
 import 'package:flutter_clean_architecture/core/errors/failures.dart';
 import 'package:flutter_clean_architecture/core/network/connection_checker.dart';
 import 'package:flutter_clean_architecture/features/auth/data/datasources/auth_remote_date_source.dart';
+import 'package:flutter_clean_architecture/features/auth/data/models/user_model.dart';
 import 'package:flutter_clean_architecture/features/auth/domain/repository/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -20,6 +21,13 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> getCurrentUser() async {
     try {
       final response = await authRemoteDataSource.getCurrentUser();
+      if (!await connectionChecker.isConnected) {
+        final session = authRemoteDataSource.currentUserSession;
+        if (session != null) {
+          return Right(UserModel.fromJson(session.user.toJson()));
+        }
+        return Left(Failure('No internet connection or user not logged in'));
+      }
       return response != null
           ? Right(response)
           : Left(Failure('User not logged in'));
