@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/core/common/app_user/appuser_cubit.dart';
 import 'package:flutter_clean_architecture/core/common/app_user/appuser_state.dart';
 import 'package:flutter_clean_architecture/core/common/widgets/loader.dart';
+import 'package:flutter_clean_architecture/core/constants/constants.dart';
 import 'package:flutter_clean_architecture/core/theme/app_pallete.dart';
 import 'package:flutter_clean_architecture/core/utils/pick_image.dart';
 import 'package:flutter_clean_architecture/core/utils/show_snackbar.dart';
@@ -163,48 +164,35 @@ class _CreateBlogPageState extends State<CreateBlogPage> {
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
-                        children:
-                            [
-                                  'technology',
-                                  'science',
-                                  'engineering',
-                                  'business',
-                                  'marketing',
-                                  'finance',
-                                  'education',
-                                  'sports',
-                                  'entertainment',
-                                  'other',
-                                ]
-                                .map(
-                                  (e) => Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          if (selectedTags.contains(e)) {
-                                            selectedTags.remove(e);
-                                          } else {
-                                            selectedTags.add(e);
-                                          }
-                                        });
-                                      },
-                                      child: Chip(
-                                        label: Text(e),
-                                        side: BorderSide(
-                                          color: selectedTags.contains(e)
-                                              ? AppPallete.gradient2
-                                              : AppPallete.transparentColor,
-                                        ),
-                                        backgroundColor:
-                                            selectedTags.contains(e)
-                                            ? AppPallete.gradient2
-                                            : AppPallete.backgroundColor,
-                                      ),
+                        children: Constants.topics
+                            .map(
+                              (e) => Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (selectedTags.contains(e)) {
+                                        selectedTags.remove(e);
+                                      } else {
+                                        selectedTags.add(e);
+                                      }
+                                    });
+                                  },
+                                  child: Chip(
+                                    label: Text(e),
+                                    side: BorderSide(
+                                      color: selectedTags.contains(e)
+                                          ? AppPallete.gradient2
+                                          : AppPallete.transparentColor,
                                     ),
+                                    backgroundColor: selectedTags.contains(e)
+                                        ? AppPallete.gradient2
+                                        : AppPallete.backgroundColor,
                                   ),
-                                )
-                                .toList(),
+                                ),
+                              ),
+                            )
+                            .toList(),
                       ),
                     ),
                     SizedBox(height: 16),

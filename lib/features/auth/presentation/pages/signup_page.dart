@@ -7,6 +7,7 @@ import 'package:flutter_clean_architecture/features/auth/presentation/bloc/auth_
 import 'package:flutter_clean_architecture/features/auth/presentation/pages/login_page.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/widgets/auth_field.dart';
 import 'package:flutter_clean_architecture/features/auth/presentation/widgets/auth_gradient_button.dart';
+import 'package:flutter_clean_architecture/features/blog/presentation/pages/blog_page.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -46,6 +47,13 @@ class _SignupPageState extends State<SignupPage> {
           listener: (context, state) {
             if (state is AuthFailure) {
               showSnackBar(context, state.error);
+            }
+            if (state is AuthSuccess) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const BlogPage()),
+                (route) => false,
+              );
             }
           },
           builder: (context, state) {

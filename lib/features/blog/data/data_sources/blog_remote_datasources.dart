@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_clean_architecture/core/errors/exceptions.dart';
 import 'package:flutter_clean_architecture/core/utils/handle_remote_call.dart';
 import 'package:flutter_clean_architecture/features/blog/data/models/blog_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -27,6 +28,12 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
             .single();
         return BlogModel.fromJson(response);
       },
+      exceptionMapper: (e) {
+        if (e is PostgrestException) {
+          return ServerExcepiton(e.code ?? 'An error occurred');
+        }
+        return ServerExcepiton(e.toString());
+      },
     );
   }
 
@@ -43,6 +50,12 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
             .from('blog_images')
             .getPublicUrl(blogId)
             .toString();
+      },
+      exceptionMapper: (e) {
+        if (e is PostgrestException) {
+          return ServerExcepiton(e.code ?? 'An error occurred');
+        }
+        return ServerExcepiton(e.toString());
       },
     );
   }
@@ -63,6 +76,12 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
             )
             .toList();
       },
+      exceptionMapper: (e) {
+        if (e is PostgrestException) {
+          return ServerExcepiton(e.code ?? 'An error occurred');
+        }
+        return ServerExcepiton(e.toString());
+      },
     );
   }
 
@@ -76,6 +95,12 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
             .eq('id', id)
             .single();
         return BlogModel.fromJson(response);
+      },
+      exceptionMapper: (e) {
+        if (e is PostgrestException) {
+          return ServerExcepiton(e.code ?? 'An error occurred');
+        }
+        return ServerExcepiton(e.toString());
       },
     );
   }
@@ -91,6 +116,12 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
             .single();
         return BlogModel.fromJson(response);
       },
+      exceptionMapper: (e) {
+        if (e is PostgrestException) {
+          return ServerExcepiton(e.code ?? 'An error occurred');
+        }
+        return ServerExcepiton(e.toString());
+      },
     );
   }
 
@@ -99,6 +130,12 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
     await handleRemoteCallException(
       function: () async {
         await supabase.from('blogs').delete().eq('isd', id);
+      },
+      exceptionMapper: (e) {
+        if (e is PostgrestException) {
+          return ServerExcepiton(e.message);
+        }
+        return ServerExcepiton(e.toString());
       },
     );
   }

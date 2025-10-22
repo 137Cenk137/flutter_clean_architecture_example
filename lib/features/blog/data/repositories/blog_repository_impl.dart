@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_clean_architecture/core/errors/failures.dart';
 import 'package:flutter_clean_architecture/core/network/connection_checker.dart';
+import 'package:flutter_clean_architecture/core/constants/constants.dart';
 import 'package:flutter_clean_architecture/core/utils/handle_repository_call_failure.dart';
 import 'package:flutter_clean_architecture/features/blog/data/data_sources/blog_local_data_source.dart';
 import 'package:flutter_clean_architecture/features/blog/data/models/blog_model.dart';
@@ -50,9 +51,9 @@ class BlogRepositoryImpl implements BlogRepository {
 
     noInternetConnectionFailureMapper: () async {
       if (!await connectionChecker.isConnected) {
-        return Failure('No internet connection');
+        return Failure(Constants.noInternetConnection);
       }
-      return Failure('An error occurred');
+      return Failure(Constants.anErrorOccurred);
     },
   );
 
@@ -81,9 +82,9 @@ class BlogRepositoryImpl implements BlogRepository {
       },
       noInternetConnectionFailureMapper: () async {
         if (!await connectionChecker.isConnected) {
-          return Failure('No internet connection');
+          return Failure(Constants.noInternetConnection);
         }
-        return Failure('An error occurred');
+        return Failure(Constants.anErrorOccurred);
       },
     );
   }
